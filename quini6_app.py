@@ -66,9 +66,13 @@ if "jugadas_generadas" not in st.session_state:
 if st.button("🔄 Generar Jugadas"):
     st.session_state.jugadas_generadas = [sorted(random.sample(range(1, 46), 6)) for _ in range(cantidad)]
 
+if st.button("🧹 Limpiar Jugadas Generadas"):
+    st.session_state.jugadas_generadas = []
+
 # ---------- Mostrar jugadas generadas ----------
+st.subheader("🎟️ Jugadas Generadas (No guardadas)")
+
 if st.session_state.jugadas_generadas:
-    st.subheader("🎟️ Jugadas Generadas (No guardadas)")
     for i, jugada in enumerate(st.session_state.jugadas_generadas):
         col1, col2 = st.columns([5, 1])
         with col1:
@@ -76,7 +80,11 @@ if st.session_state.jugadas_generadas:
         with col2:
             if st.button("💾", key=f"guardar_{i}", help="Guardar esta jugada"):
                 guardar_jugada(jugada)
+                st.session_state.jugadas_generadas.pop(i)
                 st.success(f"✅ Jugada guardada: {jugada}")
+                st.rerun()
+else:
+    st.info("🔍 No generaste ninguna jugada todavía.")
 
 # ---------- Jugadas guardadas ----------
 st.header("📋 Historial de Jugadas Guardadas")
